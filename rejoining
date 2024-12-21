@@ -1,0 +1,20 @@
+-- Rejoining Server --
+local plrs, tps
+plrs = game:GetService("Players")
+tps = game:GetService("TeleportService")
+
+function rj()
+    local plr = plrs.LocalPlayer
+    local pId = game.PlaceId
+    local tda = {
+        TeleportOptions = {
+            ReservedServerAccessCode = nil,
+            ServerId = nil
+        }
+    }
+    
+    tps:Teleport(pId, plr, tda)
+end
+
+game.IsLoaded()
+rj()
