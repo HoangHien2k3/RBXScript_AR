@@ -1,0 +1,42 @@
+-- Server Hop --
+local pId, JId, Hs, Ts, Plrs, Hr
+pId = game.PlaceId
+JId = game.JobId
+Hs = game:GetService("HttpService")
+Ts = game:GetService("TeleportService")
+Plrs = game:GetService("Players")
+Hr = http_request or syn.request or http.request
+
+if Hr then
+    local rq = Hr({
+        Url = string.format("https://games.roblox.com/v1/games/%d/servers/Public?sortOrder=Desc&limit=100&excludeFullGames=true", pId),
+        Method = "GET"
+    })
+    
+    local body
+    if rq.Body then
+        body = Hs:JSONDecode(rq.Body)
+    end
+    
+    if body and body.data then
+        local servers = {}
+        for i, v in next, body.data do
+            if type(v) == "table" and tonumber(v.playing) and tonumber(v.maxPlayers) then
+                if v.playing < v.maxPlayers and v.id ~= JId then
+                    table.insert(servers, 1, v.id)
+                end
+            end
+        end
+        
+        if #servers > 0 then
+            local tts = servers[math.random(1, #servers)]
+            Ts:TeleportToPlaceInstance(pId, tts, Plrs.LocalPlayer)
+        else
+            print("Can't find a server with available space.")
+        end
+    else
+        print("Failed to parse server list or no servers available.")
+    end
+else
+    print("Failed to make an HTTP request.")
+end
