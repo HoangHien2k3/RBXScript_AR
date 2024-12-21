@@ -1,0 +1,20 @@
+print("HH2k3: KeepScript it's currently enable right now, executed: _G.KeepScript = false, to disable it.")
+
+local Players = game:GetService("Players")
+local teleportexecute = (syn and syn.queue_on_teleport) or queue_on_teleport or (fluxus and fluxus.queue_on_teleport)
+local TeleportCheck = false
+
+_G.KeepScript = true
+
+_G.ExecuteScriptAfterTeleport = function(script)
+    Players.LocalPlayer.OnTeleport:Connect(function(State)
+        if _G.KeepScript and (not TeleportCheck) and teleportexecute then
+            TeleportCheck = true
+            teleportexecute(script)
+        end
+    end)
+end
+
+if not teleportexecute then
+    warn("Missing queue_on_teleport")
+end
