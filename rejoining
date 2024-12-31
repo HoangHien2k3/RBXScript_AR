@@ -16,5 +16,6 @@ function rj()
     tps:Teleport(pId, plr, tda)
 end
 
-game.IsLoaded()
+game:IsLoaded()
+print("Start Rejoining in Server")
 rj()
